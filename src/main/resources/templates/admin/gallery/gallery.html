@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html
+  lang="en"
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{admin/dashboardLayout.html}"
+>
+  <head>
+    <script th:src="@{/admin/js/pages/gallery.js}"></script>
+    <style>
+      /* Style for the image container */
+      .image-container {
+        position: relative;
+        overflow: hidden;
+        cursor: pointer;
+      }
+
+      /* Style for the edit and delete buttons */
+      .image-options {
+        position: absolute;
+        top: 0;
+        right: 0;
+        padding: 2px;
+        visibility: hidden;
+        opacity: 0;
+        transition: visibility 0s, opacity 0.5s linear;
+      }
+
+      .image-container:hover .image-options {
+        visibility: visible;
+        opacity: 1;
+      }
+
+      .image-options button {
+        margin-left: 2px;
+        background-color: transparent; /* Đặt màu nền là trong suốt */
+        border: none; /* Loại bỏ viền */
+      }
+
+    </style>
+
+  </head>
+  <body>
+    <div layout:fragment="content">
+      <div class="content-header">
+        <div class="container-fluid">
+          <div class="row mb-2">
+            <div class="col-sm-6">
+              <h1>Gallery</h1>
+            </div>
+            <div class="col-sm-6">
+              <ol class="breadcrumb float-sm-right">
+                <li class="breadcrumb-item"><a href="#">Home</a></li>
+                <li class="breadcrumb-item active">Gallery</li>
+              </ol>
+            </div>
+          </div>
+        </div><!-- /.container-fluid -->
+      </div>
+      <div class="content">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-12">
+              <div class="card card-primary">
+                <div class="card-header">
+                  <h4 class="card-title">Wellcome to gallery</h4>
+                </div>
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col-sm-2">
+                      <div class="image-container">
+                        <a href="/admin/img/photo1.png" data-toggle="lightbox" data-title="sample 1 - white" data-gallery="gallery">
+                          <img src="/admin/img/photo1.png" class="img-fluid mb-2" alt="white sample"/>
+                          <div class="image-options">
+                            <button class="btn btn-sm btn-danger">
+                              <i class="fas fa-trash-alt"></I>
+                            </button>
+                          </div>
+                        </a>
+                      </div>
+                    </div>
+                    <div class="col-sm-2">
+                      <div class="image-container">
+                        <a href="/admin/img/photo2.png" data-toggle="lightbox" data-title="sample 1 - white" data-gallery="gallery">
+                          <img src="/admin/img/photo2.png" class="img-fluid mb-2" alt="white sample"/>
+                          <div class="image-options">
+                            <button class="btn btn-sm btn-danger">
+                              <i class="fas fa-trash-alt"></I>
+                            </button>
+                          </div>
+                        </a>
+                      </div>
+                    </div>
+                    <div class="col-sm-2">
+                      <div class="image-container">
+                        <a href="/admin/img/photo3.jpg" data-toggle="lightbox" data-title="sample 1 - white" data-gallery="gallery">
+                          <img src="/admin/img/photo3.jpg" class="img-fluid mb-2" alt="white sample"/>
+                          <div class="image-options">
+                            <button class="btn btn-sm btn-danger">
+                              <i class="fas fa-trash-alt"></I>
+                            </button>
+                          </div>
+                        </a>
+                      </div>
+                    </div>
+                    <div class="col-sm-2">
+                      <div class="image-container">
+                        <a href="/admin/img/photo4.jpg" data-toggle="lightbox" data-title="sample 1 - white" data-gallery="gallery">
+                          <img src="/admin/img/photo4.jpg" class="img-fluid mb-2" alt="white sample"/>
+                          <div class="image-options">
+                            <button class="btn btn-sm btn-danger">
+                              <i class="fas fa-trash-alt"></I>
+                            </button>
+                          </div>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+
+</html>
