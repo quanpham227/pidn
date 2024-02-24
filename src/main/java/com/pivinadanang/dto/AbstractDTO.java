@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public abstract class AbstractDto<T> {
+public abstract class AbstractDTO<T> {
 
   private Long id;
 }

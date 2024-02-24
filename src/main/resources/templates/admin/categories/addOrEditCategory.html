@@ -6,7 +6,6 @@
   layout:decorate="~{admin/dashboardLayout.html}"
 >
   <head>
-    <script th:src="@{/admin/js/pages/addOrEditPost.js}"></script>
   </head>
   <body>
     <div layout:fragment="content">
@@ -19,7 +18,7 @@
             <div class="col-sm-6">
               <ol class="breadcrumb float-sm-right">
                 <li class="breadcrumb-item"><a href="#">Home</a></li>
-                <li class="breadcrumb-item active">Categories</li>
+                <li class="breadcrumb-item active" >Categories</li>
                 <li class="breadcrumb-item active">Add</li>
 
               </ol>
@@ -36,21 +35,56 @@
               <!-- jquery validation -->
               <div class="card card-primary">
                 <div class="card-header">
-                  <h3 class="card-title">Please enter information for a new category</h3>
+                  <h3 class="card-title" th:if="${category.isEdit}">Update Category</h3>
+                  <h3 class="card-title" th:unless="${category.isEdit}">Add a new Category</h3>
                 </div>
                 <!-- /.card-header -->
                 <!-- form start -->
-                <form id="">
+                <form th:action="@{/admin/categories/saveOrUpdate}" method="post" th:object="${category}">
                   <div class="card-body">
-                    <div class="form-group">
-                      <label for="name">Name</label>
-                      <input type="text" name="name" class="form-control" id="name" placeholder="Enter name">
+                    <div class="form-group mb-4">
+                      <label for="id"> Category ID</label>
+                      <input type="hidden" th:field="*{isEdit}" />
+                      <input
+                              type="text"
+                              class="form-control form-control-sm"
+                              th:field="*{id}"
+                              aria-describedby="categoryIdHid"
+                              placeholder="Category ID"
+                              readonly
+                      />
+                      <small
+                              th:if="${#fields.hasErrors('id')}"
+                              id="categoryIdHid"
+                              class="form-text text-muted"
+                      >Category id Required
+                      </small>
                     </div>
+                      <div class="form-group">
+                        <label for="name"> Name </label>
+                        <input
+                                type="text"
+                                class="form-control form-control-sm"
+                                th:field="*{name}"
+                                id="name"
+                                aria-describedby="nameHid"
+                                placeholder="Category Name"
+                                required
+                        />
+                        <small th:if="${#fields.hasErrors('name')}" id="nameHid" class="form-text text-danger"
+                        >Name id Required
+                        </small>
+                      </div>
                   </div>
                   <!-- /.card-body -->
                   <div class="card-footer">
-                    <a th:href="@{/admin/categories/list}" class="btn btn-primary me-1 rounded">List</a>
-                    <button class="btn btn-primary">Create</button>
+                    <div class="btn-group btn-sm ms-auto">
+                      <a th:href="@{/admin/categories/list}" class="btn btn-primary me-1 rounded ">List</a>
+                      <button class="btn btn-sm btn-primary rounded ml-2">
+                        <span th:if="${category.isEdit}">Update</span>
+                        <span th:unless="${category.isEdit}">Create</span>
+                      </button>
+                    </div>
                   </div>
                 </form>
               </div>

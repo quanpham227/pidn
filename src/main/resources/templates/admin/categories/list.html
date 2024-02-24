@@ -6,7 +6,7 @@
   layout:decorate="~{admin/dashboardLayout.html}"
 >
   <head>
-    <script th:src="@{/admin/js/pages/addOrEditPost.js}"></script>
+
   </head>
   <body>
     <div layout:fragment="content">
@@ -21,12 +21,33 @@
                 <li class="breadcrumb-item"><a href="#">Home</a></li>
                 <li class="breadcrumb-item active">Categories</li>
                 <li class="breadcrumb-item active">List</li>
-
               </ol>
             </div>
+            <script th:inline="javascript">
+              /*<![CDATA[*/
+              var message = /*[[${message}]]*/ null;
+              var alert = /*[[${alert}]]*/ null;
+              var notFound = /*[[${categoryPage.hasContent()}]]*/ null;
+              /*]]>*/
+            </script>
+            <script>
+              window.onload = function() {
+                handleToastrMessage(message,alert,notFound);
+              };
+              function handleToastrMessage(message,alert, notFound) {
+                if (message && alert) {
+                  toastr[alert](message);
+                }
+                if (!notFound) {
+                  alert = 'warning';
+                  message = 'Your search keyword does not exist';
+                  toastr[alert](message);
+                }
+              }
+            </script>
           </div>
         </div><!-- /.container-fluid -->
-      </div>
+       </div>
       <!-- Main content -->
       <div class="content">
         <div class="container-fluid">
@@ -40,16 +61,150 @@
                 </div>
                 <!-- /.card-header -->
                 <!-- form start -->
-                <form id="">
                   <div class="card-body">
+                    <div class="row mb-2">
+                      <div class="col-6">
+                        <form th:action="@{/admin/categories/list}">
+                          <div class="input-group">
+                            <input
+                                    type="text"
+                                    name="name"
+                                    id="name"
+                                    class="form-control me-2"
+                                    placeholder="Search for..."
+                            />
 
+                            <div class="input-group-btn">
+                              <button class="btn btn-primary"><i class="fas fa-search fa-sm"></i></button>
+                            </div>
+                          </div>
+                        </form>
+                      </div>
+                      <div class="col-6 d-flex justify-content-end">
+                        <a class="btn btn-primary btn-sm" th:href="@{/admin/categories/add}">New </a>
+                      </div>
+                    </div>
+                    <div class="table-responsive">
+                      <table
+                              class="table table-bordered text-center"
+                              id="dataTable"
+                              th:if="${categoryPage.hasContent()}"
+                      >
+                        <thead>
+                        <tr>
+                          <th>#</th>
+                          <th class="col-10">Name</th>
+                          <th class="col-2">Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each=" category, iStat : ${categoryPage.content}">
+                          <td>[[${category.id}]]</td>
+                          <td th:text="${category.name}"></td>
+                          <td class="d-flex gap-3 justify-content-center">
+                            <a
+                                    th:href="@{'/admin/categories/edit/' + ${category.id}}"
+                                    title="Edit"
+                                    data-toggle="tooltip"
+                            ><i class="fas fa-pen"></i
+                            ></a>
+
+                              <a
+                                      th:data-id="${category.id}"
+                                      th:data-name="${category.name}"
+                                      onclick="showConfirmModalDialog(this.getAttribute('data-id'), this.getAttribute('data-name'))"
+                                      title="Delete"
+                                      data-toggle="tooltip"
+                              >
+                              <i class="fas fa-trash" style="color: red; margin-left: 4px"></i
+                            ></a>
+                          </td>
+                        </tr>
+                        </tbody>
+                      </table>
+                      <!-- Modal Body -->
+                      <!-- if you want to close by clicking outside the modal, delete the last endpoint:data-bs-backdrop and data-bs-keyboard -->
+                      <div class="modal fade" id="confirmationId" >
+                        <div class="modal-dialog modal-dialog-centered">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h4 class="modal-title">Confirmation</h4>
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                            <div class="modal-body">
+                              <p> Do you want to delete "<span id="categoryName"></span>"?</p>
+                            </div>
+                            <div class="modal-footer justify-content-between">
+                              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                              <a id="yesOption" type="button" class="btn btn-danger">Yes</a>
+                            </div>
+                          </div>
+                          <!-- /.modal-content -->
+                        </div>
+                        <!-- /.modal-dialog -->
+                      </div>
+                      <!-- /.modal -->
+                    </div>
                   </div>
                   <!-- /.card-body -->
                   <div class="card-footer">
-                    <a th:href="@{/admin/categories/list}" class="btn btn-primary me-1 rounded">List</a>
-                    <button class="btn btn-primary">Create</button>
+                    <div class="row card-footer text-muted bg-white justify-content-start">
+                    <div class="col-2">
+                      <form class="form-inline">
+                        <div class="form-group">
+                          <select
+                                  name="size"
+                                  id="size"
+                                  class="form-select form-select-lg"
+                                  onchange="this.form.submit()"
+                          >
+                            <option th:selected="${categoryPage.size == 5}" value="5">5</option>
+                            <option th:selected="${categoryPage.size == 10}" value="10">10</option>
+                            <option th:selected="${categoryPage.size == 15}" value="15">15</option>
+                            <option th:selected="${categoryPage.size == 20}" value="20">20</option>
+                            <option th:selected="${categoryPage.size == 30}" value="30">30</option>
+                          </select>
+                        </div>
+                      </form>
+                    </div>
+                    <div class="col text-end">
+                      <nav aria-label="Page navigation" th:if="${categoryPage.totalPages > 0}">
+                        <ul class="pagination justify-content-end">
+                          <li th:class="${1 == categoryPage.number + 1} ? 'page-item active' : 'page-item'">
+                            <a
+                                    th:href="@{/admin/categories/list(name=${name}, size=${categoryPage.size},page=${1})}"
+                                    class="page-link"
+                            >First</a
+                            >
+                          </li>
+                          <li
+                                  class="page-item active"
+                                  th:each=" pageNumber : ${pageNumbers}"
+                                  th:if="${categoryPage.totalPages > 1}"
+                                  th:class="${pageNumber == categoryPage.number + 1} ? 'page-item active' : 'page-item'"
+                          >
+                            <a
+                                    th:href="@{/admin/categories/list(name=${name}, size=${categoryPage.size},page=${pageNumber})}"
+                                    class="page-link"
+                                    th:text="${pageNumber}"
+                            ></a>
+                          </li>
+                          <li
+                                  th:class="${categoryPage.totalPages == categoryPage.number + 1} ? 'page-item active': 'page-item'"
+                          >
+                            <a
+                                    th:href="@{/admin/categories/list(name=${name}, size=${categoryPage.size},page=${categoryPage.totalPages})}"
+                                    class="page-link"
+                            >Last</a
+                            >
+                          </li>
+                        </ul>
+                      </nav>
+                    </div>
                   </div>
-                </form>
+                  </div>
               </div>
             </div>
           </div>
@@ -57,9 +212,14 @@
         </div><!-- /.container-fluid -->
       </div>
     </div>
-    <script>
 
-    </script>
   </body>
 
 </html>
+<script>
+  function showConfirmModalDialog(id, name) {
+    $('#categoryName').text(name);
+    $('#yesOption').attr('href', '/admin/categories/delete/' + id);
+    $('#confirmationId').modal('show');
+  }
+</script>

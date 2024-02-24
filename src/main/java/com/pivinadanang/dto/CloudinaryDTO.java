@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CloudinaryDto {
+public class CloudinaryDTO {
     private String url;
     private String publicId;
 }

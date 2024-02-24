@@ -12,4 +12,8 @@ $(document).ready(function() {
     if (sidebarState) {
         $('.sidebar').html(sidebarState);
     }
+
+
 });
+
+
