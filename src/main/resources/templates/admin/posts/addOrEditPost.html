@@ -38,29 +38,41 @@
                 </div>
                 <!-- /.card-header -->
                 <!-- form start -->
-                <form id="quickForm">
+                <form class="needs-validation" onsubmit="return validateCKEditorContent();">
                   <div class="card-body">
                     <div class="form-group">
                       <label for="title">Title</label>
-                      <input type="text" name="email" class="form-control" id="title" placeholder="Enter title">
-                    </div>
-                    <div class="form-group">
-                      <label for="exampleInputFile">Select thumbnail</label>
-                      <div class="input-group">
-                        <div class="custom-file">
-                          <input type="file" class="custom-file-input" id="exampleInputFile">
-                          <label class="custom-file-label" for="exampleInputFile">Choose file</label>
-                        </div>
-                      </div>
+                      <input class="form-control" type="text" name="title"  id="title" placeholder="Enter title" required>
                     </div>
 
-                    <div class="form-group mb-0">
-                      <textarea id="editor" name="editor" rows="30" cols="80"></textarea>
+                    <div>
+                      <textarea class="form-control" id="editor" name="editor" required></textarea>
                     </div>
                   </div>
                   <!-- /.card-body -->
                   <div class="card-footer">
-                    <button type="submit" class="btn btn-primary">Publish</button>
+                    <div class="row">
+                      <div class="col-6">
+                        <button type="submit" class="btn btn-primary">Publish</button>
+                      </div>
+                      <div class="col-5">
+                        <div class="form-group">
+                          <label for="thumbnailFile">Choose thumbnail</label>
+                          <div class="input-group">
+                            <div class="custom-file">
+                              <input type="file" class="custom-file-input form-group" id="thumbnailFile" accept="image/*" required>
+                              <label class="custom-file-label" for="thumbnailFile" id="thumbnailLabel">Choose file</label>
+                            </div>
+                          </div>
+
+                        </div>
+                      </div>
+                      <div class="col-md-1 mr-auto">
+                        <div class="form-group">
+                          <img class="rounded" id="previewImage" src="/admin/img/photo1.png"  width="90" height="70"/>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </form>
               </div>
@@ -70,9 +82,42 @@
         </div><!-- /.container-fluid -->
       </div>
     </div>
-    <script>
-
-    </script>
   </body>
 
 </html>
+<script>
+  document.getElementById('thumbnailFile').addEventListener('change', function() {
+    var file = this.files[0]; // Lấy file từ danh sách các files được chọn
+    var fileName = file.name; // Lấy tên của file
+    var label = document.getElementById('thumbnailLabel');
+    var img = document.getElementById('previewImage');
+    label.innerHTML = fileName; // Hiển thị tên của file trong label
+
+    var reader = new FileReader(); // Tạo một đối tượng FileReader để đọc dữ liệu của file
+
+    reader.onload = function(e) {
+      // Khi file được đọc thành công, gán dữ liệu dưới dạng URL vào thuộc tính src của thẻ img
+      img.src = e.target.result;
+    }
+
+    // Đọc file dưới dạng URL
+    reader.readAsDataURL(file);
+  });
+
+
+</script>
+<script>
+  // Định nghĩa hàm kiểm tra dữ liệu của CKEditor trước khi gửi form đi
+  function validateCKEditorContent() {
+    // Lấy nội dung của CKEditor
+    var editorData = CKEDITOR.instances['editor'].getData();
+
+    // Kiểm tra xem nội dung có rỗng không
+    if (editorData.trim() === '') {
+      alert('Please enter content for the post.');
+      return false; // Ngăn form được gửi đi
+    }
+    // Nếu nội dung hợp lệ, cho phép form được gửi đi
+    return true;
+  }
+</script>
