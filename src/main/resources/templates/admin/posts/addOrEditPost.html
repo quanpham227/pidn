@@ -52,12 +52,24 @@
                   <!-- /.card-body -->
                   <div class="card-footer">
                     <div class="row">
-                      <div class="col-6">
-                        <button type="submit" class="btn btn-primary">Publish</button>
-                      </div>
-                      <div class="col-5">
+                      <div class="col-md-5">
                         <div class="form-group">
-                          <label for="thumbnailFile">Choose thumbnail</label>
+                          <button type="submit" class="btn btn-primary mt-4">Publish</button>
+                        </div>
+                      </div>
+                      <div class="col-md-2">
+                        <div class="form-group">
+                          <label for="category">Catetory</label>
+                          <select class="custom-select rounded-0" id="category">
+                            <option>Value 1</option>
+                            <option>Value 2</option>
+                            <option>Value 3</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-3">
+                        <div class="form-group">
+                          <label for="thumbnailFile">Thumbnail</label>
                           <div class="input-group">
                             <div class="custom-file">
                               <input type="file" class="custom-file-input form-group" id="thumbnailFile" accept="image/*" required>
@@ -67,9 +79,9 @@
 
                         </div>
                       </div>
-                      <div class="col-md-1 mr-auto">
+                      <div class="col-md-2 ">
                         <div class="form-group">
-                          <img class="rounded" id="previewImage" src="/admin/img/photo1.png"  width="90" height="70"/>
+                          <img class="rounded float-right" id="previewImage" src="/admin/img/photo1.png"  width="90" height="70"/>
                         </div>
                       </div>
                     </div>
