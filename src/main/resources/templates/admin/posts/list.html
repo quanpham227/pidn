@@ -14,12 +14,12 @@
         <div class="container-fluid">
           <div class="row mb-2">
             <div class="col-sm-6">
-              <h1>Categories</h1>
+              <h1>Posts</h1>
             </div>
             <div class="col-sm-6">
               <ol class="breadcrumb float-sm-right">
                 <li class="breadcrumb-item"><a href="#">Home</a></li>
-                <li class="breadcrumb-item active">Categories</li>
+                <li class="breadcrumb-item active">Posts</li>
                 <li class="breadcrumb-item active">List</li>
               </ol>
             </div>
@@ -27,7 +27,7 @@
               /*<![CDATA[*/
               var message = /*[[${message}]]*/ null;
               var alert = /*[[${alert}]]*/ null;
-              var notFound = /*[[${categoryPage.hasContent()}]]*/ null;
+              var notFound = /*[[${postPage.hasContent()}]]*/ null;
               /*]]>*/
             </script>
             <script>
@@ -57,19 +57,19 @@
               <!-- jquery validation -->
               <div class="card card-primary">
                 <div class="card-header">
-                  <h3 class="card-title">Categories</h3>
+                  <h3 class="card-title">Posts</h3>
                 </div>
                 <!-- /.card-header -->
                 <!-- form start -->
                   <div class="card-body">
                     <div class="row mb-2">
                       <div class="col-6">
-                        <form th:action="@{/admin/categories/list}">
+                        <form th:action="@{/admin/posts/list}">
                           <div class="input-group">
                             <input
                                     type="text"
-                                    name="name"
-                                    id="name"
+                                    name="title"
+                                    id="title"
                                     class="form-control me-2"
                                     placeholder="Search for..."
                             />
@@ -81,42 +81,43 @@
                         </form>
                       </div>
                       <div class="col-6 d-flex justify-content-end">
-                        <a class="btn btn-primary btn-sm" th:href="@{/admin/categories/add}">New </a>
+                        <a class="btn btn-primary btn-sm" th:href="@{/admin/posts/add}">New </a>
                       </div>
                     </div>
                     <div class="table-responsive">
                       <table
                               class="table table-bordered text-center"
                               id="dataTable"
-                              th:if="${categoryPage.hasContent()}"
+                              th:if="${postPage.hasContent()}"
                       >
                         <thead>
                         <tr>
                           <th>#</th>
-                          <th>Name</th>
-                          <th>slug</th>
-                          <th>Date created</th>
+                          <th>Title</th>
+                          <th>Category</th>
+                          <th>Status</th>
+                          <th>Time</th>
                           <th>Action</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <tr th:each=" category, iStat : ${categoryPage.content}">
-                          <td th:text="${iStat.index + categoryPage.number * categoryPage.size + 1}"></td>
-                          <td th:text="${category.name}"></td>
-                          <td th:text="${category.slug}"></td>
-                          <td th:text="${#dates.format(category.createDate, 'dd/MM/yyyy')}"></td>
-                          <td class="d-flex gap-3 justify-content-center">
+                        <tr th:each=" post, iStat : ${postPage.content}">
+                          <td>[[${post.id}]]</td>
+                          <td th:text="${post.title}"></td>
+                          <td th:text="${post.categoryName}"></td>
+                          <td th:text="${post.status}"></td>
+                          <td th:text="${#dates.format(post.createDate, 'dd/MM/yyyy')}"></td>
+                          <td class="justify-content-center">
                             <a
-                                    th:href="@{'/admin/categories/edit/' + ${category.id}}"
+                                    th:href="@{'/admin/posts/edit/' + ${post.id}}"
                                     title="Edit"
                                     data-toggle="tooltip"
                             ><i class="fas fa-pen"></i
                             ></a>
 
                               <a
-                                      th:data-id="${category.id}"
-                                      th:data-name="${category.name}"
-                                      onclick="showConfirmModalDialog(this.getAttribute('data-id'), this.getAttribute('data-name'))"
+                                      th:data-id="${post.id}"
+                                      onclick="showConfirmModalDialog(this.getAttribute('data-id'))"
                                       title="Delete"
                                       data-toggle="tooltip"
                               >
@@ -138,7 +139,7 @@
                               </button>
                             </div>
                             <div class="modal-body">
-                              <p> Do you want to delete "<span id="categoryName"></span>"?</p>
+                              <p> Do you want to delete ?</p>
                             </div>
                             <div class="modal-footer justify-content-between">
                               <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -164,21 +165,21 @@
                                   class="form-select form-select-lg"
                                   onchange="this.form.submit()"
                           >
-                            <option th:selected="${categoryPage.size == 5}" value="5">5</option>
-                            <option th:selected="${categoryPage.size == 10}" value="10">10</option>
-                            <option th:selected="${categoryPage.size == 15}" value="15">15</option>
-                            <option th:selected="${categoryPage.size == 20}" value="20">20</option>
-                            <option th:selected="${categoryPage.size == 30}" value="30">30</option>
+                            <option th:selected="${postPage.size == 5}" value="5">5</option>
+                            <option th:selected="${postPage.size == 10}" value="10">10</option>
+                            <option th:selected="${postPage.size == 15}" value="15">15</option>
+                            <option th:selected="${postPage.size == 20}" value="20">20</option>
+                            <option th:selected="${postPage.size == 30}" value="30">30</option>
                           </select>
                         </div>
                       </form>
                     </div>
                     <div class="col text-end">
-                      <nav aria-label="Page navigation" th:if="${categoryPage.totalPages > 0}">
+                      <nav aria-label="Page navigation" th:if="${postPage.totalPages > 0}">
                         <ul class="pagination justify-content-end">
-                          <li th:class="${1 == categoryPage.number + 1} ? 'page-item active' : 'page-item'">
+                          <li th:class="${1 == postPage.number + 1} ? 'page-item active' : 'page-item'">
                             <a
-                                    th:href="@{/admin/categories/list(name=${name}, size=${categoryPage.size},page=${1})}"
+                                    th:href="@{/admin/posts/list(name=${name}, size=${postPage.size},page=${1})}"
                                     class="page-link"
                             >First</a
                             >
@@ -186,20 +187,20 @@
                           <li
                                   class="page-item active"
                                   th:each=" pageNumber : ${pageNumbers}"
-                                  th:if="${categoryPage.totalPages > 1}"
-                                  th:class="${pageNumber == categoryPage.number + 1} ? 'page-item active' : 'page-item'"
+                                  th:if="${postPage.totalPages > 1}"
+                                  th:class="${pageNumber == postPage.number + 1} ? 'page-item active' : 'page-item'"
                           >
                             <a
-                                    th:href="@{/admin/categories/list(name=${name}, size=${categoryPage.size},page=${pageNumber})}"
+                                    th:href="@{/admin/posts/list(name=${name}, size=${postPage.size},page=${pageNumber})}"
                                     class="page-link"
                                     th:text="${pageNumber}"
                             ></a>
                           </li>
                           <li
-                                  th:class="${categoryPage.totalPages == categoryPage.number + 1} ? 'page-item active': 'page-item'"
+                                  th:class="${postPage.totalPages == postPage.number + 1} ? 'page-item active': 'page-item'"
                           >
                             <a
-                                    th:href="@{/admin/categories/list(name=${name}, size=${categoryPage.size},page=${categoryPage.totalPages})}"
+                                    th:href="@{/admin/posts/list(name=${name}, size=${postPage.size},page=${postPage.totalPages})}"
                                     class="page-link"
                             >Last</a
                             >
@@ -221,8 +222,7 @@
 
 </html>
 <script>
-  function showConfirmModalDialog(id, name) {
-    $('#categoryName').text(name);
+  function showConfirmModalDialog(id) {
     $('#yesOption').attr('href', '/admin/categories/delete/' + id);
     $('#confirmationId').modal('show');
   }

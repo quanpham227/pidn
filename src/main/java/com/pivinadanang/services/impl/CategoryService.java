@@ -5,6 +5,7 @@ import com.pivinadanang.entity.CategoryEntity;
 import com.pivinadanang.exception.NotFoundException;
 import com.pivinadanang.repository.CategoryRepository;
 import com.pivinadanang.services.ICategoryService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,6 +18,9 @@ import java.util.List;
 public class CategoryService implements ICategoryService {
     @Autowired
     private CategoryRepository categoryRepository;
+
+    @Autowired
+    private ModelMapper modelMapper;
 
     @Override
     public List<CategoryDTO> getIdAndNameCategory() {
@@ -44,6 +48,11 @@ public class CategoryService implements ICategoryService {
     }
 
     @Override
+    public CategoryDTO findByCategoryName(String name) {
+        return categoryRepository.findByCategoryName(name);
+    }
+
+    @Override
     public CategoryDTO getIdAndNameCategoryById(Long id) {
         CategoryDTO categoryDTO = categoryRepository.getIdAndNameCategoryById(id);
         return categoryDTO;
@@ -55,11 +64,9 @@ public class CategoryService implements ICategoryService {
         CategoryEntity categoryEntity = new CategoryEntity();
         categoryEntity.setId(categoryDTO.getId());
         categoryEntity.setName(categoryDTO.getName());
+        categoryEntity.generateCategorySlug();
         CategoryEntity categorySave = categoryRepository.save(categoryEntity);
-        CategoryDTO  category = new CategoryDTO();
-        category.setId(categorySave.getId());
-        category.setName(categorySave.getName());
-        return categoryDTO;
+        return modelMapper.map(categorySave, CategoryDTO.class);
     }
 
     @Override
@@ -67,13 +74,10 @@ public class CategoryService implements ICategoryService {
     public CategoryDTO updateCategory(CategoryDTO categoryDTO) {
         CategoryEntity categoryOptional = categoryRepository.findByCategoryIdForUpdate(categoryDTO.getId())
                 .orElseThrow(()->new NotFoundException("Category not found "));
-
         categoryOptional.setName(categoryDTO.getName());
-        CategoryEntity category = categoryRepository.save(categoryOptional);
-        CategoryDTO categoryResponse = new CategoryDTO();
-        categoryResponse.setId(category.getId());
-        categoryResponse.setName(category.getName());
-        return categoryResponse;
+        categoryOptional.generateCategorySlug();
+        CategoryEntity categorySave = categoryRepository.save(categoryOptional);
+        return modelMapper.map(categorySave, CategoryDTO.class);
     }
 
     @Override

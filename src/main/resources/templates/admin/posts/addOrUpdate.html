@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html
+  lang="en"
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{admin/dashboardLayout.html}"
+>
+  <head>
+
+  </head>
+  <body>
+    <div layout:fragment="content">
+      <div class="content-header">
+        <div class="container-fluid">
+          <div class="row mb-2">
+            <div class="col-sm-6">
+              <h5 th:if="${post.isEdit}">Please update for post</h5>
+              <h5 th:unless="${post.isEdit}">Please enter information for a new post</h5>
+            </div>
+            <div class="col-sm-6">
+              <ol class="breadcrumb float-sm-right">
+                <li class="breadcrumb-item"><a href="#">Home</a></li>
+                <li class="breadcrumb-item active">Post</li>
+              </ol>
+            </div>
+          </div>
+        </div><!-- /.container-fluid -->
+      </div>
+      <!-- Main content -->
+      <div class="content">
+        <div class="container-fluid">
+          <form th:action="@{/admin/posts/addOrUpdate}" method="post" th:object="${post}" enctype="multipart/form-data">
+            <div class="row">
+              <div class="col-md-9">
+                <div class="card card-primary">
+                  <div class="row">
+                    <div class="card-body">
+                      <div class="form-group">
+                        <input class="form-control" type="text" name="title" id="title" th:field="*{title}" placeholder="Enter title" aria-describedby="titleH">
+                        <small th:if="${#fields.hasErrors('title')}" id="titleH" class="form-text text-muted">title id required</small>
+                      </div>
+                      <div>
+                        <textarea class="form-control" id="editor" name="content" th:field="*{content}" aria-describedby="contentH"></textarea>
+                        <small th:if="${#fields.hasErrors('content')}" id="contentH" class="form-text text-muted">content id required</small>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-3">
+                  <div class="card card-default">
+                    <div class="card-header">
+                      <h3 class="card-title">Puslished</h3>
+                    </div>
+                    <div class="card-body">
+                      <div class="row">
+                        <div class="col-md-6">
+                          <button type="button" class="btn btn-sm btn-default">Preview</button>
+                        </div>
+                        <div class="col-md-6 text-right">
+                          <button type="button" class="btn btn-sm btn-default">Save Draft</button>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="card-footer">
+                      <button th:if="${post.isEdit}" type="submit" class="btn btn-primary">Update</button>
+                      <button th:unless="${post.isEdit}" type="submit" class="btn btn-primary">Puslished</button>
+                    </div>
+                  </div>
+                  <div class="card card-default">
+                    <div class="card-header">
+                      <h3 class="card-title">Categories</h3>
+                    </div>
+                    <div class="card-body">
+                      <!-- Vòng lặp để hiển thị danh sách các checkbox cho từng danh mục -->
+                      <div th:each="category : ${categories}">
+                        <div class="form-check">
+                          <!-- Sử dụng ID duy nhất cho từng checkbox -->
+                          <input class="form-check-input" type="checkbox" th:id="'category_' + ${category.id}"
+                                 th:name="'categories'" th:value="${category.id}" th:checked="${category.id == post.categoryId}">
+                          <label class="form-check-label" th:for="'category_' + ${category.id}" th:text="${category.name}"></label>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="card-footer">
+                      <a class="link-dark" href="/admin/categories/add">Add Category</a>
+                    </div>
+                  </div>
+                <div class="card card-default">
+                  <div class="card-header">
+                    <h3 class="card-title">Tag</h3>
+                  </div>
+                  <div class="card-body">
+                    <div class="input-group input-group-sm">
+                      <input type="text" class="form-control">
+                      <span class="input-group-append"><button type="button" class="btn btn-info btn-flat">Add</button></span>
+                    </div>
+                  </div>
+                </div>
+                <div class="card card-default">
+                  <div class="card-header">
+                    <h3 class="card-title">Thumbnail</h3>
+                  </div>
+                  <div class="card-body">
+                    <div class="custom-file">
+                      <input type="file" class="form-control-file" id="thumbnailFile" name="thumbnailFile">
+                    </div>
+                    <div class="text-center mt-3">
+                      <img class="rounded"
+                           id="previewImage"
+                           th:src="${post.url} ? ${post.url} : '/admin/img/photo1.png'"
+                           src="/admin/img/photo1.png"
+                           th:alt="Thumbnail" width="140" height="80"/>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </form>
+        </div><!-- /.container-fluid -->
+      </div>
+    </div>
+  </body>
+</html>
+<script th:src="@{/admin/js/pages/addOrEditPost.js}"></script>
+
+
+

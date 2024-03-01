@@ -44,17 +44,25 @@ public class CategoryController {
     public String saveOrUpdate (@Valid @ModelAttribute("category")CategoryDTO categoryDTO ,
                                 BindingResult result, RedirectAttributes redirectAttributes) {
         if(result.hasErrors()){
-            return "admin/categories/addOrEdit";
+            return "admin/categories/addOrEditCategory";
         }
-        if(categoryDTO.getId()== null){
-            categoryService.createCategory(categoryDTO);
-            redirectAttributes.addFlashAttribute("message","Category is save");
-            redirectAttributes.addFlashAttribute("alert","success");
+        CategoryDTO category = categoryService.findByCategoryName(categoryDTO.getName());
+        if (category != null) {
+            redirectAttributes.addFlashAttribute("message", "Category is already");
+            redirectAttributes.addFlashAttribute("alert", "error");
         }else {
-            categoryService.updateCategory(categoryDTO);
-            redirectAttributes.addFlashAttribute("message","Category is update");
-            redirectAttributes.addFlashAttribute("alert","success");
+            if(categoryDTO.getId()== null){
+                categoryService.createCategory(categoryDTO);
+                redirectAttributes.addFlashAttribute("message","Category is save");
+                redirectAttributes.addFlashAttribute("alert","success");
+
+            }else {
+                categoryService.updateCategory(categoryDTO);
+                redirectAttributes.addFlashAttribute("message","Category is update");
+                redirectAttributes.addFlashAttribute("alert","success");
+            }
         }
+
         return "redirect:/admin/categories/list";
     }
     @GetMapping ("list")

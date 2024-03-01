@@ -19,11 +19,7 @@ public class GalleryEntity extends AbstractEntity{
         this.url = url;
     }
 
-    public GalleryEntity(Long id, String name, String url) {
-        super(id);
-        this.name = name;
-        this.url = url;
-    }
+
 
     public String getName() {
         return name;

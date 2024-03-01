@@ -29,4 +29,5 @@ CKEDITOR.editorConfig = function( config ) {
     ['TextColor','BGColor'],
     ['Maximize','ShowBlocks','Syntaxhighlight']
   ]
+  config.height = '700px';
 };

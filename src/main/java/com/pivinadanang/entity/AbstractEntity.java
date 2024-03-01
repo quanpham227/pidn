@@ -18,19 +18,46 @@ public abstract class AbstractEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+
+    @Column(name = "createdby")
+    @CreatedBy
+    private String createdBy;
+
+    @Column(name = "modifiedby")
+    @LastModifiedBy
+    private String modifiedBy;
+
+
     public AbstractEntity() {
     }
 
-    public AbstractEntity(Long id) {
+    public AbstractEntity(Long id, String createdBy, String modifiedBy) {
         this.id = id;
+        this.createdBy = createdBy;
+        this.modifiedBy = modifiedBy;
     }
 
     public Long getId() {
         return id;
     }
 
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public String getModifiedBy() {
+        return modifiedBy;
+    }
+
     public void setId(Long id) {
         this.id = id;
     }
 
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public void setModifiedBy(String modifiedBy) {
+        this.modifiedBy = modifiedBy;
+    }
 }

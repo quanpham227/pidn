@@ -10,4 +10,8 @@ import lombok.NoArgsConstructor;
 public abstract class AbstractDTO<T> {
 
   private Long id;
+  private String createdBy;
+  private String modifiedBy;
+
+
 }

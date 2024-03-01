@@ -15,35 +15,39 @@ import java.util.Optional;
 
 @Repository
 public interface CategoryRepository extends JpaRepository<CategoryEntity,Long> {
-    @Query("SELECT new com.pivinadanang.dto.CategoryDTO(c.id, c.name) " +
+    @Query("SELECT new com.pivinadanang.dto.CategoryDTO(c.id, c.createdBy,c.modifiedBy,c.name,c.slug, c.createDate, c.updateDate) " +
             "FROM CategoryEntity c ")
     List<CategoryDTO> getIdAndNameCategory();
 
-    @Query("SELECT new com.pivinadanang.dto.CategoryDTO(c.id, c.name) " +
+    @Query("SELECT new com.pivinadanang.dto.CategoryDTO(c.id, c.createdBy,c.modifiedBy,c.name,c.slug, c.createDate, c.updateDate) " +
             "FROM CategoryEntity c ")
     Page<CategoryDTO> findAllPaginged(Pageable pageable);
 
 
-    @Query("SELECT new com.pivinadanang.dto.CategoryDTO(c.id, c.name) " +
+    @Query("SELECT new com.pivinadanang.dto.CategoryDTO(c.id, c.createdBy,c.modifiedBy,c.name,c.slug, c.createDate, c.updateDate) " +
             "FROM CategoryEntity c " +
             "WHERE LOWER(c.name) LIKE LOWER(concat('%', :name, '%'))")
     Page<CategoryDTO> searchCategoryPaginged (String name, Pageable pageable);
 
 
 
-    @Query("SELECT new com.pivinadanang.dto.CategoryDTO(c.id, c.name) " +
+    @Query("SELECT new com.pivinadanang.dto.CategoryDTO(c.id, c.createdBy,c.modifiedBy,c.name,c.slug, c.createDate, c.updateDate) " +
             "FROM CategoryEntity c " +
             "WHERE c.id = :categoryId")
     Optional<CategoryDTO> findByCategoryId(@Param("categoryId") Long id);
-    @Query("SELECT new com.pivinadanang.entity.CategoryEntity(c.id, c.name) " +
+
+
+    @Query("SELECT new com.pivinadanang.entity.CategoryEntity(c.id, c.createdBy,c.modifiedBy,c.name,c.slug, c.createDate,c.updateDate) " +
             "FROM CategoryEntity c " +
             "WHERE c.id = :categoryId")
     Optional<CategoryEntity> findById(@Param("categoryId") Long id);
+
+
     @Query(value = "select c from CategoryEntity c where c.id= ?1")
     Optional<CategoryEntity> findByCategoryIdForUpdate(Long id);
 
 
-    @Query("SELECT new com.pivinadanang.dto.CategoryDTO(c.id, c.name) " +
+    @Query("SELECT new com.pivinadanang.dto.CategoryDTO(c.id, c.createdBy,c.modifiedBy,c.name,c.slug, c.createDate, c.updateDate) " +
             "FROM CategoryEntity c " +
             "WHERE c.id = :categoryId")
     CategoryDTO getIdAndNameCategoryById (@Param("categoryId") Long id);
@@ -52,4 +56,9 @@ public interface CategoryRepository extends JpaRepository<CategoryEntity,Long> {
     @Modifying
     @Query(value = "delete from CategoryEntity c where c.id = ?1")
     void deleteCategoryById(Long id);
+
+    @Query("SELECT new com.pivinadanang.dto.CategoryDTO(c.id, c.createdBy,c.modifiedBy,c.name,c.slug, c.createDate, c.updateDate) " +
+            "FROM CategoryEntity c " +
+            "WHERE c.name = :name")
+    CategoryDTO findByCategoryName(String name);
 }

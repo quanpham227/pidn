@@ -11,6 +11,7 @@ public interface ICategoryService {
     Page<CategoryDTO> searchCategoryPaginged(String name, Pageable pageable);
     Page<CategoryDTO> findAllPaginged(Pageable pageable);
     CategoryDTO findByCategoryId(Long id);
+    CategoryDTO findByCategoryName(String name);
     CategoryDTO getIdAndNameCategoryById(Long id);
 
     CategoryDTO createCategory(CategoryDTO categoryDTO);
